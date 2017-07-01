@@ -18,13 +18,14 @@ class ViewController: UIViewController {
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, . sound], completionHandler: { (granted, error) in
         
             if granted {
-                print("Notification access granted")
+                self.loadNotification()
             } else {
-                print(error?.localizedDescription as Any)
+                print(error?.localizedDescription)
             }
         })
     }
 
+    // 3. SCHEDULE NOTIFICATION
     @IBAction func notifyBtnTapped(sender: UIButton) {
         scheduleNotification(inSeconds: 5, completion: { success in
             if success {
@@ -35,6 +36,11 @@ class ViewController: UIViewController {
         })
     }
     
+    func loadNotification() {
+        
+    }
+    
+    // 2. CREATE OUR NOTIFICATION CONTENT
     func scheduleNotification(inSeconds: TimeInterval, completion: @escaping (_ Success: Bool) -> ()) {
         
         // Add an attachment
@@ -48,8 +54,11 @@ class ViewController: UIViewController {
         
         attachment = try! UNNotificationAttachment(identifier: "myNotification", url: imageUrl, options: .none)
         
-        
+        // Create our notification content
         let notif = UNMutableNotificationContent()
+        
+        // ONLY FOR EXTENSION
+        notif.categoryIdentifier = "myNotificationCategory"
         
         notif.title = "New Notification"
         notif.subtitle = "These are great!"
@@ -67,9 +76,7 @@ class ViewController: UIViewController {
             } else {
                 completion(true)
             }
-        
         })
     }
-
 }
 
